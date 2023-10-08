@@ -1,0 +1,51 @@
+# /etc/systemd/system/{{ _service_file }}
+# A minimal rclone mount with configurable VFS cache
+#########################################################################
+# Title:         Saltbox: Rclone Generic Mount                             #
+# Author(s):     owine                                                  #
+# URL:           https://github.com/saltyorg/Saltbox                    #
+# --                                                                    #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+
+[Unit]
+Description=Rclone Generic Mount
+After=network-online.target
+
+[Service]
+User={{ user.name }}
+Group={{ user.name }}
+Type=notify
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/bin/rclone mount \
+    --allow-other \
+{% if (rclone_vfs_cache_dir_lookup | length > 0) and item.vfs_cache.enabled %}
+    --cache-dir={{ rclone_vfs_cache_dir_lookup }} \
+{% endif %}
+    --config={{ rclone_config_path }} \
+    --copy-links \
+    --max-read-ahead=200M \
+    --rc \
+    --rc-addr=localhost:{{ rclone_remort_port }} \
+    --rc-no-auth \
+    --syslog \
+    --umask=002 \
+{% if item.vfs_cache.enabled %}
+    --vfs-cache-min-free-space={{ rclone_vfs_cache_min_free_space }} \
+    --vfs-cache-max-age={{ item.vfs_cache.max_age | default('504h') }} \
+    --vfs-cache-max-size={{ item.vfs_cache.size | default('50G') }} \
+    --vfs-cache-mode=full \
+    --vfs-cache-poll-interval={{ rclone_vfs_cache_poll_interval }} \
+    --vfs-fast-fingerprint \
+{% endif %}
+    -v \
+    "{{ rclone_remote_with_path }}" "/mnt/remote/{{ rclone_remote_name }}"
+ExecStop=/bin/fusermount3 -uz "/mnt/remote/{{ rclone_remote_name }}"
+Restart=on-abort
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=default.target
