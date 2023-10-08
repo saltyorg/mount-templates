@@ -10,6 +10,8 @@ Please observe the following standards for contributing templates:
 
 - The official Saltbox [mount templates](https://github.com/saltyorg/Saltbox/tree/master/roles/remote/templates) should be used as examples.
 - All templates should be tested by the contributor and confirmed to work
-- We prefer generic templates that cover all use cases for a vendor/solution (vendor.j2) but will also accept templates for specific use cases which are labeled as such (vendor-usecase.j2). A generic template for a vendor/solution.
+- We prefer generic templates that cover all use cases for a vendor/solution (`vendor.j2`) but will also accept templates for specific use cases which are labeled as such (`vendor-usecase.j2`).
 - We prefer templates that do not hardcode items such as RC ports, directories and paths.
-- All templates should have the .j2 extension and be saved in the root folder of the repository (the same folder as this README.) No pull requests will be accepted for other folders. The `custom` folder is reserved for end user use and is ignored by git.
+- We prefer all templates have the RC (remote control) enabled as per the official templates.
+- We prefer all templates have configurable VFS cache as per the official templates.
+- All templates should have the `.j2` extension and be saved in the root folder of the repository (the same folder as this README.) No pull requests will be accepted for other folders. The `custom` folder is reserved for end user use and is ignored by git.
