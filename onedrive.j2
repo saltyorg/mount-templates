@@ -49,7 +49,6 @@ ExecStart=/usr/bin/rclone mount \
     --vfs-cache-mode=full \
     --vfs-cache-poll-interval={{ rclone_vfs_cache_poll_interval }} \
     --vfs-fast-fingerprint \
-    --vfs-disk-space-total-size=25000G \
     --vfs-read-ahead=128M \
 {% endif %}
     --vfs-read-chunk-size-limit=2G \
